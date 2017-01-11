@@ -1,0 +1,7 @@
+{
+  "name": "twitchtv-streamers",
+  "version": "1.0.0",
+  "dependencies": {
+    "primer-css": "^4.4.0"
+  }
+}

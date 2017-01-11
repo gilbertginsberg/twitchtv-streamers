@@ -1,0 +1,66 @@
+ html {
+   height: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 10px;
+  min-width: 100%;
+  min-height: 100vh;
+  background-color: #6E5494;
+  font-size: medium;
+  color: white;
+  font-family: Arial;
+}
+
+.flexContainer {
+  min-width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#twitchBox {
+  width: 30%;
+  height: 600px;
+  background-color: #C9510C;
+  border-radius: 3px;
+  display: flex;
+  flex-direction: column;
+}
+
+.example {
+  height: 50px;
+  border: 1px solid black;
+  margin: 5px;
+  background-color: white;
+}
+
+nav {
+  display: flex;
+  height: 10%;
+  border-bottom: 1px solid black;
+}
+
+nav a {
+  text-decoration: none;
+  flex-basis: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+a {
+  color: white;
+}
+
+a:hover {
+  background-color: #6CC644;
+}
+
+footer {
+  margin-top: 50px;
+  border-top: 1px solid lightgrey;
+}
