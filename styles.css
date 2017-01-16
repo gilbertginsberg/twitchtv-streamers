@@ -52,12 +52,16 @@ body {
 
 #twitchBox .streamers span {
   align-self: center;
-  margin-left: 15px;
+  margin-left: 25px;
 }
-
 
 #twitchBox .streamers a {
   color: #6E5494;
+}
+
+#twitchBox .streamers .status {
+  position: absolute;
+  margin-left: 400px;
 }
 
 nav {
@@ -86,6 +90,10 @@ a {
   box-sizing: border-box;
   color: white;
   border-left: 1px solid white;
+}
+
+footer a {
+  border-left: 0px;
 }
 
 a:hover {

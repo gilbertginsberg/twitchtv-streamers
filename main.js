@@ -1,31 +1,33 @@
 // javascript
 
-// defining helper functions
+// defines logo and link functions
 function createLogo(logoEl, logoSrc, displayName) {
   logoEl.setAttribute('src', logoSrc);
-  logoEl.setAttribute('alt', 'Twitch TV - ' + displayName + ' logo');
+  logoEl.setAttribute('alt', `Twitch TV - ${displayName} logo`);
 }
 
 function createHyperLinkedUserName(anchor, spanForUserName, displayName) {
-  anchor.innerHTML = displayName;
-  anchor.setAttribute('href', 'https://www.twitch.tv/' + displayName);
+  const anchorEl = anchor;
+  anchorEl.innerHTML = displayName;
+  anchor.setAttribute('href', `https://www.twitch.tv/${displayName}`);
   spanForUserName.appendChild(anchor);
 }
 
-function showStreamStatus(streamData, user) {
-  const streamJSON = JSON.parse(streamData);
-  console.log(streamJSON);
+function showStreamStatus(streamJsonData, user) {
+  const streamJson = JSON.parse(streamJsonData);
+  console.log(streamJson);
   const spanForStatus = document.createElement('span');
-  const userId = document.getElementById(user);
-  console.log('userId is ' + userId)
+  const userDiv = document.getElementById(user);
 
-  if (streamJSON.stream === null) {
+  if (streamJson.stream === null) {
     spanForStatus.innerHTML = 'Offline';
-    userId.appendChild(spanForStatus);
+    userDiv.appendChild(spanForStatus);
   } else {
     spanForStatus.innerHTML = 'Online';
-    userId.appendChild(spanForStatus);
+    userDiv.appendChild(spanForStatus);
   }
+
+  spanForStatus.setAttribute('class', 'status');
 }
 
 function showChannelLogoAndName(data) {
@@ -34,19 +36,18 @@ function showChannelLogoAndName(data) {
   console.log(json);
   const displayName = json.display_name;
   const userName = json.name;
-  const channelUrl = json.url;
   const logoSrc = json.logo;
 
   // creates elements for displaying channel details
+  const twitchBox = document.getElementById('twitchBox');
   const div = document.createElement('div');
   const logo = document.createElement('img');
   const spanForUserName = document.createElement('span');
   const anchor = document.createElement('a');
 
-  const twitchBox = document.getElementById('twitchBox');
-
-  createHyperLinkedUserName(anchor, spanForUserName, displayName);
+  // set up channel divs with logo and link
   createLogo(logo, logoSrc, displayName);
+  createHyperLinkedUserName(anchor, spanForUserName, displayName);
 
   // adds channel details to streamer container
   div.setAttribute('id', userName);
@@ -54,31 +55,28 @@ function showChannelLogoAndName(data) {
   div.appendChild(logo);
   div.appendChild(spanForUserName);
 
-  // appends channel with all its details included
   twitchBox.appendChild(div);
 }
 
 function ajaxRequest(resource, user) {
   const xhr = new XMLHttpRequest();
-  console.log('called');
 
   // if ajax response is 200, then handlers are called
-  xhr.onreadystatechange = function() {
-    if (xhr.readyState === XMLHttpRequest.DONE) {
-        if (xhr.status === 200) {
-          if (resource.indexOf('channels') !== -1) {
-            showChannelLogoAndName(xhr.responseText);
-          } else if (resource.indexOf('streams') !== -1) {
-            showStreamStatus(xhr.responseText, user);
-          }
-        } else {
-          console.log(xhr.statusText);
-          console.log('There was a problem with the request.');
-        }
+  xhr.onload = function () {
+    if (xhr.status === 200) {
+      if (resource.indexOf('channels') !== -1) {
+        showChannelLogoAndName(xhr.responseText);
+      } else {
+      //  showStreamStatus(xhr.responseText, user);
       }
-    };
+    } else {
+      console.log(xhr.statusText);
+      console.log('There was a problem with the request.');
+    }
+  };
+  console.log(`counter ${counter}`);
 
-  xhr.onerror = function() {
+  xhr.onerror = function () {
     console.log('There was an error!');
   };
   xhr.open('GET', resource);
@@ -91,10 +89,10 @@ function initialize() {
   let streamUrl = '';
 
   for (let i = 0; i < users.length; i += 1) {
-    channelUrl = 'https://wind-bow.gomix.me/twitch-api/channels/' + users[i];
-    streamUrl = 'https://wind-bow.gomix.me/twitch-api/streams/' + users[i];
+    channelUrl = `https://wind-bow.gomix.me/twitch-api/channels/${users[i]}`;
+  //  streamUrl = `https://wind-bow.gomix.me/twitch-api/streams/${users[i]}`;
     ajaxRequest(channelUrl);
-    ajaxRequest(streamUrl, users[i]);
+  //  ajaxRequest(streamUrl, users[i]);
   }
 }
 
