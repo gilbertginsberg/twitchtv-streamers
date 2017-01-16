@@ -74,7 +74,6 @@ function ajaxRequest(resource, user) {
       console.log('There was a problem with the request.');
     }
   };
-  console.log(`counter ${counter}`);
 
   xhr.onerror = function () {
     console.log('There was an error!');
