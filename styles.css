@@ -21,8 +21,7 @@ body {
 }
 
 #twitchBox {
-  width: 640px;
-  height: 320px;
+  width: 55%;
   box-sizing: border-box;
   border: 1px solid white;
   background-color: #C9510C;
@@ -30,16 +29,15 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding-bottom: 4px;
 }
 
-#twitchBox .streamers {
-  width: 99%;
-  height: 65px;
+.streamers {
+  width: 98%;
   border: 1px solid black;
-  margin-top: 5px;
-  margin-bottom: 5px;
-  color: #6E5494;
-  background-color: #FAFAFA;
+  margin: 4px;
+  color: #fff;
+  background-color: #333333;
   display: flex;
   justify-content: flex-start;
 }
@@ -52,16 +50,24 @@ body {
 
 #twitchBox .streamers span {
   align-self: center;
+  width: 115px;
   margin-left: 25px;
 }
 
 #twitchBox .streamers a {
-  color: #6E5494;
+  border-left: 0px;
 }
 
 #twitchBox .streamers .status {
-  position: absolute;
-  margin-left: 400px;
+  width: 75%;
+}
+
+.online {
+  background-color: #4078C0;
+}
+
+.offline {
+  background-color: #333333;
 }
 
 nav {
@@ -70,7 +76,7 @@ nav {
   height: 40px;
   box-sizing: border-box;
   border-bottom: 1px solid white;
-  margin-bottom: 5px;
+  margin-bottom: 4px;
 }
 
 nav a {
@@ -96,7 +102,7 @@ footer a {
   border-left: 0px;
 }
 
-a:hover {
+nav a:hover {
   color: #4078C0;
   background-color: white;
 }

@@ -22,11 +22,12 @@ function showStreamStatus(streamJsonData, user) {
   if (streamJson.stream === null) {
     spanForStatus.innerHTML = 'Offline';
     userDiv.appendChild(spanForStatus);
+    userDiv.setAttribute('class', 'streamers offline');
   } else {
-    spanForStatus.innerHTML = 'Online';
+    spanForStatus.innerHTML = `${streamJson.stream.game} ${streamJson.stream.channel.status}`;
     userDiv.appendChild(spanForStatus);
+    userDiv.setAttribute('class', 'streamers online');
   }
-
   spanForStatus.setAttribute('class', 'status');
 }
 
@@ -67,7 +68,7 @@ function ajaxRequest(resource, user) {
       if (resource.indexOf('channels') !== -1) {
         showChannelLogoAndName(xhr.responseText);
       } else {
-      //  showStreamStatus(xhr.responseText, user);
+        showStreamStatus(xhr.responseText, user);
       }
     } else {
       console.log(xhr.statusText);
@@ -87,12 +88,12 @@ function initialize() {
   let channelUrl = '';
   let streamUrl = '';
 
-  for (let i = 0; i < users.length; i += 1) {
-    channelUrl = `https://wind-bow.gomix.me/twitch-api/channels/${users[i]}`;
-  //  streamUrl = `https://wind-bow.gomix.me/twitch-api/streams/${users[i]}`;
+  users.forEach(function (user) {
+    channelUrl = `https://wind-bow.gomix.me/twitch-api/channels/${user}`;
+    streamUrl = `https://wind-bow.gomix.me/twitch-api/streams/${user}`;
     ajaxRequest(channelUrl);
-  //  ajaxRequest(streamUrl, users[i]);
-  }
+    ajaxRequest(streamUrl, user);
+  });
 }
 
 window.onload = initialize;

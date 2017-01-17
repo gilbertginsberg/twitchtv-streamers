@@ -11,21 +11,30 @@
     <div class="flexContainer">
       <h1>Scratch that itch and see who's streaming on Twitch...</h1>
 
-      <div id="twitchBox">
+      <div id='twitchBox'>
         <nav>
-          <a href="index.html">All</a>
-          <a href="online.html" class="selected">Online</a>
-          <a href="offline.html">Offline</a>
+          <a href='index.html' id='main-nav-tab'>All</a>
+          <a href='online.html' class='selected'>Online</a>
+          <a href='offline.html'>Offline</a>
         </nav>
-
-        <p>online</p>
-        <p id="testTwitch">testing twitch</p>
       </div>
 
       <footer>
         <p>Built by <a href="https://twitter.com/gilbertginsberg">Esteban Gilberto</a> (alias)</p>
       </footer>
     </div>
+    <script src='main.js'></script>
+    <script>
+      console.log('hello');
+      var twitchBox = document.getElementById('twitchBox');
+      var offlineChannels = document.getElementsByClassName('offline');
+      console.log(offlineChannels);
+      console.log('length is ' + offlineChannels.length);
+      for (let i = 0; i < 5; i++) {
+        console.log(i);
+      }
 
+      console.log('adios');
+    </script>
   </body>
 </html>
