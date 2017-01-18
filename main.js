@@ -1,4 +1,4 @@
-// index.html javascript
+ // index.html javascript
 
 // defines logo and link functions
 function createLogo(logoEl, logoSrc, displayName) {
@@ -64,11 +64,13 @@ function ajaxRequest(resource, user) {
 
   // if ajax response is 200, then handlers are called
   xhr.onload = function () {
-    if (xhr.status === 200) {
-      if (resource.indexOf('channels') !== -1) {
-        showChannelLogoAndName(xhr.responseText);
-      } else {
-        showStreamStatus(xhr.responseText, user);
+    if (xhr.readyState === 4) {
+      if (xhr.status === 200) {
+        if (resource.indexOf('channels') !== -1) {
+          showChannelLogoAndName(xhr.responseText);
+        } else {
+          showStreamStatus(xhr.responseText, user);
+        }
       }
     } else {
       console.log(xhr.statusText);
@@ -79,7 +81,7 @@ function ajaxRequest(resource, user) {
   xhr.onerror = function () {
     console.log('There was an error!');
   };
-  xhr.open('GET', resource);
+  xhr.open('GET', resource, false);
   xhr.send();
 }
 

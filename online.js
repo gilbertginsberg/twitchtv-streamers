@@ -60,7 +60,7 @@ function ajaxRequest(resource, user) {
   xhr.onerror = function () {
     console.log('There was an error!');
   };
-  xhr.open('GET', resource);
+  xhr.open('GET', resource, false);
   xhr.send();
 }
 
