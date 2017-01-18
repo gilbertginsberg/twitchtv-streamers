@@ -1,4 +1,4 @@
-// javascript
+// index.html javascript
 
 // defines logo and link functions
 function createLogo(logoEl, logoSrc, displayName) {
