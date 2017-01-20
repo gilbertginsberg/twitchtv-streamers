@@ -1,6 +1,6 @@
  // index.html javascript
 
-// defines logo and link functions
+// defines logo, link, and placeholder functions
 function createLogo(logoEl, logoSrc, displayName) {
   logoEl.setAttribute('src', logoSrc);
   logoEl.setAttribute('alt', `Twitch TV - ${displayName} logo`);
@@ -11,6 +11,37 @@ function createHyperLinkedUserName(anchor, spanForUserName, displayName) {
   anchorEl.innerHTML = displayName;
   anchor.setAttribute('href', `https://www.twitch.tv/${displayName}`);
   spanForUserName.appendChild(anchor);
+}
+
+function showPlaceholderIfNoAccount(parsedJson, user) {
+  const channelDiv = document.getElementById(user);
+  const span = document.createElement('span');
+
+  span.innerHTML = parsedJson.message;
+  channelDiv.appendChild(span);
+}
+
+function showChannelLogoAndNameOrPlaceholder(parsedJson, user) {
+  console.log(parsedJson);
+  const displayName = parsedJson.display_name;
+  const logoSrc = parsedJson.logo;
+
+  // creates elements for displaying channel details
+  const channelDiv = document.getElementById(user);
+  const logo = document.createElement('img');
+  const spanForUserName = document.createElement('span');
+  const anchor = document.createElement('a');
+
+  // set up channel with logo and link OR placeholder if account doesn't exist
+  if (parsedJson.error) {
+    showPlaceholderIfNoAccount(parsedJson, user);
+  } else {
+    createLogo(logo, logoSrc, displayName);
+    createHyperLinkedUserName(anchor, spanForUserName, displayName);
+    // adds channel details to streamer container
+    channelDiv.appendChild(logo);
+    channelDiv.appendChild(spanForUserName);
+  }
 }
 
 function showStreamStatus(streamJsonData, user) {
@@ -31,43 +62,28 @@ function showStreamStatus(streamJsonData, user) {
   spanForStatus.setAttribute('class', 'status');
 }
 
-function showChannelLogoAndName(data) {
-  // extracts json data that'll be used in app
-  const json = JSON.parse(data);
-  console.log(json);
-  const displayName = json.display_name;
-  const userName = json.name;
-  const logoSrc = json.logo;
-
-  // creates elements for displaying channel details
+function createChannelBoxes(jsonString, user) {
+  const json = JSON.parse(jsonString);
   const twitchBox = document.getElementById('twitchBox');
-  const div = document.createElement('div');
-  const logo = document.createElement('img');
-  const spanForUserName = document.createElement('span');
-  const anchor = document.createElement('a');
+  const channelDiv = document.createElement('div');
 
-  // set up channel divs with logo and link
-  createLogo(logo, logoSrc, displayName);
-  createHyperLinkedUserName(anchor, spanForUserName, displayName);
+  channelDiv.setAttribute('id', user);
+  channelDiv.setAttribute('class', 'streamers');
+  twitchBox.appendChild(channelDiv);
 
-  // adds channel details to streamer container
-  div.setAttribute('id', userName);
-  div.setAttribute('class', 'streamers');
-  div.appendChild(logo);
-  div.appendChild(spanForUserName);
-
-  twitchBox.appendChild(div);
+  // callback
+  showChannelLogoAndNameOrPlaceholder(json, user);
 }
 
 function ajaxRequest(resource, user) {
   const xhr = new XMLHttpRequest();
 
   // if ajax response is 200, then handlers are called
-  xhr.onload = function () {
+  xhr.onload = function ajaxResponse() {
     if (xhr.readyState === 4) {
       if (xhr.status === 200) {
         if (resource.indexOf('channels') !== -1) {
-          showChannelLogoAndName(xhr.responseText);
+          createChannelBoxes(xhr.responseText, user);
         } else {
           showStreamStatus(xhr.responseText, user);
         }
@@ -78,7 +94,7 @@ function ajaxRequest(resource, user) {
     }
   };
 
-  xhr.onerror = function () {
+  xhr.onerror = function errorResponse() {
     console.log('There was an error!');
   };
   xhr.open('GET', resource, false);
@@ -86,14 +102,14 @@ function ajaxRequest(resource, user) {
 }
 
 function initialize() {
-  const users = ['freecodecamp', 'esl_sc2', 'jhovgaard'];
+  const users = ['freecodecamp', 'esl_sc2', 'jhovgaard', 'brunofin', 'comster404'];
   let channelUrl = '';
   let streamUrl = '';
 
-  users.forEach(function (user) {
+  users.forEach(function makeAjaxCalls(user) {
     channelUrl = `https://wind-bow.gomix.me/twitch-api/channels/${user}`;
     streamUrl = `https://wind-bow.gomix.me/twitch-api/streams/${user}`;
-    ajaxRequest(channelUrl);
+    ajaxRequest(channelUrl, user);
     ajaxRequest(streamUrl, user);
   });
 }

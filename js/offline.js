@@ -13,34 +13,15 @@ function createHyperLinkedUserName(anchor, spanForUserName, displayName) {
   spanForUserName.appendChild(anchor);
 }
 
-function showStreamStatus(streamJsonData, user) {
-  const streamJson = JSON.parse(streamJsonData);
-  console.log(streamJson);
-  const spanForStatus = document.createElement('span');
-  const userDiv = document.getElementById(user);
-  const twitchBox = document.getElementById('twitchBox');
-
-  if (streamJson.stream === null) {
-    spanForStatus.innerHTML = 'Offline';
-    userDiv.appendChild(spanForStatus);
-    userDiv.setAttribute('class', 'streamers offline');
-  } else {
-    twitchBox.removeChild(userDiv);
-  }
-  spanForStatus.setAttribute('class', 'status');
-}
-
-function showChannelLogoAndName(data) {
+function showChannelLogoAndName(json, user) {
   // extracts json data that'll be used in app
-  const json = JSON.parse(data);
+
   console.log(json);
   const displayName = json.display_name;
-  const userName = json.name;
   const logoSrc = json.logo;
 
   // creates elements for displaying channel details
-  const twitchBox = document.getElementById('twitchBox');
-  const div = document.createElement('div');
+  const div = document.getElementById(user);
   const logo = document.createElement('img');
   const spanForUserName = document.createElement('span');
   const anchor = document.createElement('a');
@@ -50,22 +31,50 @@ function showChannelLogoAndName(data) {
   createHyperLinkedUserName(anchor, spanForUserName, displayName);
 
   // adds channel details to streamer container
-  div.setAttribute('id', userName);
-  div.setAttribute('class', 'streamers');
   div.appendChild(logo);
   div.appendChild(spanForUserName);
+}
 
-  twitchBox.appendChild(div);
+function createChannelBoxes(json, user) {
+  const twitchBox = document.getElementById('twitchBox');
+  const channelDiv = document.createElement('div');
+
+  channelDiv.setAttribute('id', user);
+  channelDiv.setAttribute('class', 'streamers');
+  twitchBox.appendChild(channelDiv);
+
+  // callback
+  showChannelLogoAndName(json, user);
+}
+
+function showStreamStatus(streamJsonData, user) {
+  const streamJson = JSON.parse(streamJsonData);
+  console.log(streamJson);
+  const spanForStatus = document.createElement('span');
+  const userDiv = document.getElementById(user);
+  const twitchBox = document.getElementById('twitchBox');
+
+  if (streamJson.stream === null && userDiv !== null) {
+    spanForStatus.innerHTML = 'Offline';
+    userDiv.appendChild(spanForStatus);
+    userDiv.setAttribute('class', 'streamers offline');
+  } else if (streamJson.stream) {
+    twitchBox.removeChild(userDiv);
+  }
+  spanForStatus.setAttribute('class', 'status');
 }
 
 function ajaxRequest(resource, user) {
   const xhr = new XMLHttpRequest();
 
   // if ajax response is 200, then handlers are called
-  xhr.onload = function () {
+  xhr.onload = function ajaxResponse() {
     if (xhr.status === 200) {
       if (resource.indexOf('channels') !== -1) {
-        showChannelLogoAndName(xhr.responseText);
+        const json = JSON.parse(xhr.responseText);
+        if (!json.error) {
+          createChannelBoxes(json, user);
+        }
       } else {
         showStreamStatus(xhr.responseText, user);
       }
@@ -75,7 +84,7 @@ function ajaxRequest(resource, user) {
     }
   };
 
-  xhr.onerror = function () {
+  xhr.onerror = function errorResponse() {
     console.log('There was an error!');
   };
   xhr.open('GET', resource, false);
@@ -83,14 +92,14 @@ function ajaxRequest(resource, user) {
 }
 
 function initialize() {
-  const users = ['freecodecamp', 'esl_sc2', 'jhovgaard'];
+  const users = ['freecodecamp', 'esl_sc2', 'jhovgaard', 'brunofin', 'comster404'];
   let channelUrl = '';
   let streamUrl = '';
 
-  users.forEach(function (user) {
+  users.forEach(function makeAjaxCalls(user) {
     channelUrl = `https://wind-bow.gomix.me/twitch-api/channels/${user}`;
     streamUrl = `https://wind-bow.gomix.me/twitch-api/streams/${user}`;
-    ajaxRequest(channelUrl);
+    ajaxRequest(channelUrl, user);
     ajaxRequest(streamUrl, user);
   });
 }
