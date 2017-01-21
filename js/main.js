@@ -79,14 +79,12 @@ function ajaxRequest(resource, user) {
   const xhr = new XMLHttpRequest();
 
   // if ajax response is 200, then handlers are called
-  xhr.onload = function ajaxResponse(json) {
-    if (xhr.readyState === 4) {
-      if (xhr.status === 200) {
-        if (resource.indexOf('channels') !== -1) {
-          createChannelBoxes(xhr.responseText, user);
-        } else {
-          showStreamStatus(xhr.responseText, user);
-        }
+  xhr.onload = function ajaxResponse() {
+    if (xhr.status === 200) {
+      if (resource.indexOf('channels') !== -1) {
+        createChannelBoxes(xhr.responseText, user);
+      } else {
+        showStreamStatus(xhr.responseText, user);
       }
     } else {
       console.log(`Appears to be a problem with req. Status is ${xhr.statusText}`);
