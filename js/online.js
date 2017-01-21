@@ -62,8 +62,7 @@ function ajaxRequest(resource, user) {
     if (xhr.status === 200) {
       createStreamDiv(xhr.responseText, user);
     } else {
-      console.log(xhr.statusText);
-      console.log('There was a problem with the request.');
+      console.log(`Appears to be a problem with req. Status is ${xhr.statusText}`);
     }
   };
 

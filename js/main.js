@@ -79,7 +79,7 @@ function ajaxRequest(resource, user) {
   const xhr = new XMLHttpRequest();
 
   // if ajax response is 200, then handlers are called
-  xhr.onload = function ajaxResponse() {
+  xhr.onload = function ajaxResponse(json) {
     if (xhr.readyState === 4) {
       if (xhr.status === 200) {
         if (resource.indexOf('channels') !== -1) {
@@ -89,11 +89,11 @@ function ajaxRequest(resource, user) {
         }
       }
     } else {
-      console.log(xhr.statusText);
-      console.log('There was a problem with the request.');
+      console.log(`Appears to be a problem with req. Status is ${xhr.statusText}`);
     }
   };
 
+  // onerror calls your callback function is there's an error with the request
   xhr.onerror = function errorResponse() {
     console.log('There was an error!');
   };
