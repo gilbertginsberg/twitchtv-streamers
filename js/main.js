@@ -18,6 +18,7 @@ function showPlaceholderIfNoAccount(parsedJson, user) {
   const span = document.createElement('span');
 
   span.innerHTML = parsedJson.message;
+  span.setAttribute('class', 'placeholderSpan');
   channelDiv.appendChild(span);
 }
 
