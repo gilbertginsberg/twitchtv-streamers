@@ -52,8 +52,6 @@ function showStreamStatus(streamJsonData, user) {
   const userDiv = document.getElementById(user);
 
   // Define media query for devices < 500px
-  const maxWidth500 = window.matchMedia('(max-width: 500px)');
-
   function mediaQueryOnlineStatusHelper(mq) {
     if (mq.matches) {
       spanForStatus.innerHTML = `${streamJson.stream.game}`;
@@ -69,10 +67,14 @@ function showStreamStatus(streamJsonData, user) {
     userDiv.appendChild(spanForStatus);
     userDiv.setAttribute('class', 'streamers offline');
   } else if (window.matchMedia) {
+    const maxWidth500 = window.matchMedia('(max-width: 500px)');
+
     maxWidth500.addListener(mediaQueryOnlineStatusHelper);
     mediaQueryOnlineStatusHelper(maxWidth500);
   } else {
     spanForStatus.innerHTML = `${streamJson.stream.game}`;
+    userDiv.appendChild(spanForStatus);
+    userDiv.setAttribute('class', 'streamers online');
   }
 
   spanForStatus.setAttribute('class', 'status');

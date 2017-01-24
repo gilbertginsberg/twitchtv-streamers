@@ -30,11 +30,29 @@ function showStreamStatus(parsedJson, user) {
   const game = parsedJson.stream.game;
   const channelStatus = parsedJson.stream.channel.status;
 
-  if (parsedJson.stream !== null) {
-    showLogoAndUserName(logo, displayName, user);
-    spanForStatus.innerHTML = `${game} ${channelStatus}`;
+  // Define media query for devices < 500px
+  function mediaQueryOnlineStatusHelper(mq) {
+    if (mq.matches) {
+      spanForStatus.innerHTML = `${game}`;
+    } else {
+      spanForStatus.innerHTML = `${game} ${channelStatus}`;
+    }
     userDiv.appendChild(spanForStatus);
     userDiv.setAttribute('class', 'streamers online');
+  }
+
+  if (parsedJson.stream !== null) {
+    showLogoAndUserName(logo, displayName, user);
+    if (window.matchMedia) {
+      const maxWidth500 = window.matchMedia('(max-width: 500px)');
+
+      maxWidth500.addListener(mediaQueryOnlineStatusHelper);
+      mediaQueryOnlineStatusHelper(maxWidth500);
+    } else {
+      spanForStatus.innerHTML = `${game}`;
+      userDiv.appendChild(spanForStatus);
+      userDiv.setAttribute('class', 'streamers online');
+    }
   }
   spanForStatus.setAttribute('class', 'status');
 }
