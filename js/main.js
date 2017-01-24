@@ -50,13 +50,14 @@ function showStreamStatus(streamJsonData, user) {
   console.log(streamJson);
   const spanForStatus = document.createElement('span');
   const userDiv = document.getElementById(user);
+
+  // Define media query for devices < 500px
   const maxWidth500 = window.matchMedia('(max-width: 500px)');
-  function mediaQueryOnlineStatusHelper(maxWidth500) {
-    if (maxWidth500.matches) {
-      console.log('matchMedia is being called');
+
+  function mediaQueryOnlineStatusHelper(mq) {
+    if (mq.matches) {
       spanForStatus.innerHTML = `${streamJson.stream.game}`;
     } else {
-      console.log('matchMedia is NOT being called');
       spanForStatus.innerHTML = `${streamJson.stream.game} ${streamJson.stream.channel.status}`;
     }
     userDiv.appendChild(spanForStatus);
@@ -67,10 +68,13 @@ function showStreamStatus(streamJsonData, user) {
     spanForStatus.innerHTML = 'Offline';
     userDiv.appendChild(spanForStatus);
     userDiv.setAttribute('class', 'streamers offline');
-  } else {
+  } else if (window.matchMedia) {
     maxWidth500.addListener(mediaQueryOnlineStatusHelper);
     mediaQueryOnlineStatusHelper(maxWidth500);
+  } else {
+    spanForStatus.innerHTML = `${streamJson.stream.game}`;
   }
+
   spanForStatus.setAttribute('class', 'status');
 }
 
