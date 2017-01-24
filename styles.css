@@ -1,3 +1,8 @@
+@media screen and (max-width: 500px) {
+  div#twitchBox {
+    width: 75%;
+ }
+}
  html {
    height: 100%;
 }
